@@ -8,7 +8,7 @@ DB::DB(string path)
 	
 	while(getline(infile,temp))
 	{
-		Data.push_front(temp);	
+		Data.push_back(temp);	
 	}
 	infile.close();
 }
@@ -43,7 +43,6 @@ DB::~DB()
 	for(list<string> :: iterator it = Data.begin(); it!=Data.end(); it++)
 	{
 		ofile << (*it + "\n");
-		cout << (*it + "\n");
 	}
 	ofile.close();
 }

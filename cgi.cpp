@@ -6,7 +6,7 @@
 
 using namespace std;
 void Send(CGI* cgi, DB* db);
-void Delete(DB* db, int id);
+void Delete(CGI* cgi, DB* db);
 string Show(DB* db);
 string readFile(const string& fileName);
 
@@ -15,26 +15,35 @@ int main()
 {
 	string PostData;
     cin>>PostData;
-    CGI *cgi = new CGI(PostData);
+    CGI *cgi = new CGI(PostData, getenv("HTTP_COOKIE") );
     DB *db = new DB("DB_records.txt"); 
-    cout << "Content-Type: text/html; charset=utf-8"<< endl << endl;
+    cout << "Content-Type: text/html; charset=utf-8"<< endl;
 
 	if (cgi->httpPost("send")=="send")
 		{
 			Send(cgi,db);
+			cout << cgi->setCookie("Name", cgi->httpPost("Name"));
+			cout << cgi->setCookie("FamilyName", cgi->httpPost("FamilyName"));
+			cout << endl;
 			cout << readFile("start.html");
 		}
 	if (cgi->httpPost("show")=="show")
 		{
-			cout << "Data:  " << Show(db) << endl;
+			cout << endl;
+			cout <<  Show(db) << endl;
+			//cout << cgi->getCookie("Name");
 			return 0;
 		}
 	if (cgi->httpPost("delete")=="delete")
-		Delete(db, 0);
+		{
+			Delete(cgi, db);
+			cout << endl;
+			cout <<  Show(db) << endl;
+		}
 	delete db;
     return 0;
 }
-//send=send&Name=Lech&FamilyName=Walensa
+
 void Send(CGI* cgi, DB* db)
 {
 	string record = cgi->httpPost("Name") + " " 
@@ -55,11 +64,10 @@ string Show(DB* db)
 	it = Page.begin();
 	it++;
 	it++;
+	it++;
 	for(int i = 0; i < db->RecordsCount(); i++)
 	{
-		Output = db->ReadRecord(i) + 
-		"<p><input name=\"delete\"  type=\"submit\" value=\"" + 
-		to_string(i) + "\"></p>";
+		Output = "<li><p>"  +  db->ReadRecord(i) + "\t<input name=\"check" + to_string(i) +"\" type=\"checkbox\"></p></li>";
 		Page.insert(it, Output);
 	}
 	Output = "";
@@ -68,8 +76,18 @@ string Show(DB* db)
 	return Output;
 }
 
-void Delete(DB* db, int id)
-{}
+void Delete(CGI* cgi, DB* db)
+{
+	string name;
+	for(int i = 0; i < db->RecordsCount(); i++)
+	{
+		name = "check" + to_string(i);
+		if (cgi->httpPost(name) == "on")
+			db->DeleteRecord(i);
+	}
+	
+	
+}
 
 string readFile(const string& fileName) {
     ifstream f(fileName);
