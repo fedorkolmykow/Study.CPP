@@ -25,7 +25,7 @@ int main()
 			cout << cgi->setCookie("Name", cgi->httpPost("Name"));
 			cout << cgi->setCookie("FamilyName", cgi->httpPost("FamilyName"));
 			cout << endl;
-			cout << readFile("start.html");
+			cout << readFile("index.html");
 		}
 	if (cgi->httpPost("show")=="show")
 		{
