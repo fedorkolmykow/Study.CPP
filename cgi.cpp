@@ -3,6 +3,7 @@
 #include "DB.h"
 #include <fstream>
 #include <iostream>
+#include <string>
 
 using namespace std;
 void Send(CGI* cgi, DB* db);
@@ -13,10 +14,11 @@ string readFile(const string& fileName);
 
 int main()
 {
-	string PostData;
-    cin>>PostData;
-    CGI *cgi = new CGI(PostData, getenv("HTTP_COOKIE") );
-    DB *db = new DB("DB_records.txt"); 
+	CGI *cgi;
+	DB *db;   
+	cgi = new CGI();
+    db = new DB("DB_records.txt"); 
+    
     cout << "Content-Type: text/html; charset=utf-8"<< endl;
 
 	if (cgi->httpPost("send")=="send")
@@ -26,19 +28,27 @@ int main()
 			cout << cgi->setCookie("FamilyName", cgi->httpPost("FamilyName"));
 			cout << endl;
 			cout << readFile("index.html");
+			cout << "В Базу данных добавлено: " << cgi->httpPost("Name") << "  " << cgi->httpPost("FamilyName");
 		}
+		
 	if (cgi->httpPost("show")=="show")
 		{
 			cout << endl;
 			cout <<  Show(db) << endl;
-			//cout << cgi->getCookie("Name");
 			return 0;
 		}
+		
 	if (cgi->httpPost("delete")=="delete")
 		{
 			Delete(cgi, db);
 			cout << endl;
 			cout <<  Show(db) << endl;
+		}
+	if (cgi->httpPost("back")=="back")
+		{
+			cout << endl;
+			cout << readFile("index.html");
+			return 0;
 		}
 	delete db;
     return 0;
@@ -83,7 +93,10 @@ void Delete(CGI* cgi, DB* db)
 	{
 		name = "check" + to_string(i);
 		if (cgi->httpPost(name) == "on")
-			db->DeleteRecord(i);
+		{
+				db->DeleteRecord(i);
+				i--;
+		}
 	}
 	
 	

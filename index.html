@@ -1,10 +1,20 @@
+<!DOCTYPE HTML>
+<head>
+	 <meta charset="utf-8">
+</head>
 <body>
-		<form action="programm.cgi" method="POST">
+		<form action="programm.cgi" method="POST" enctype="application/x-www-form-urlencoded | multipart/form-data">
                 <p><input id="n" name="Name"></p>
                 <p><input id="fn" name="FamilyName"></p>
-                <p><input name="send"  type="submit" value="send"></p>
-                <p><input name="show"  type="submit" value="show"></p>
-        </form>
+                <p>
+					<input name="send"  type="submit" value="send">
+					<input name="show"  type="submit" value="show">
+				</p>
+				<p>
+					<input type="file" name="myFile">
+					<input name="load" type="submit" value="load">
+				</p>
+		</form>
         <script>
           function getCookie(name) {
             var value = "; " + document.cookie;
@@ -15,3 +25,5 @@
           document.getElementById("fn").value = getCookie("FamilyName");
         </script>
 </body>
+
+
