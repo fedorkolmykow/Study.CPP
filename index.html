@@ -3,7 +3,7 @@
 	 <meta charset="utf-8">
 </head>
 <body>
-		<form action="programm.cgi" method="POST" enctype="application/x-www-form-urlencoded | multipart/form-data">
+		<form action="cgi_script.cgi" method="POST" enctype="application/x-www-form-urlencoded">
                 <p><input id="n" name="Name"></p>
                 <p><input id="fn" name="FamilyName"></p>
                 <p>
@@ -11,9 +11,14 @@
 					<input name="show"  type="submit" value="show">
 				</p>
 				<p>
-					<input type="file" name="myFile">
-					<input name="load" type="submit" value="load">
+					<input name="admin"  type="submit" value="admin">
+					<input name="user"  type="submit" value="user">
 				</p>
+		</form>
+		<form action="cgi_script.cgi" method="POST" enctype="multipart/form-data">
+				<p>	<input type="file" name="myFileOne"> </p>
+				<p>	<input type="file" name="myFileTwo"> </p>
+				<p>	<input name="load" type="submit" value="load"> </p>
 		</form>
         <script>
           function getCookie(name) {
@@ -25,5 +30,3 @@
           document.getElementById("fn").value = getCookie("FamilyName");
         </script>
 </body>
-
-

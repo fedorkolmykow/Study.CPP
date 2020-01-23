@@ -1,6 +1,7 @@
 #include <iostream>
 #include "cgi_class.h"
 #include "DB.h"
+#include "session.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -14,43 +15,61 @@ string readFile(const string& fileName);
 
 int main()
 {
-	CGI *cgi;
+	
+	cout << "Content-Type: text/html; charset=utf-8"<< endl;
 	DB *db;   
-	cgi = new CGI();
+    Session *ses;
+	CGI *cgi = new CGI();
     db = new DB("DB_records.txt"); 
-    
-    cout << "Content-Type: text/html; charset=utf-8"<< endl;
+    ses = new Session(cgi->getCookie("uid"));
 
+    //cout << ses->getUID() << "<br>";
+    if (ses->getNewSes())
+        cout << cgi->setCookie("uid", ses->getUID());
+	if (cgi->httpPost("send")=="send")
+		{
+			cout << cgi->setCookie("Name", cgi->httpPost("Name"));
+			cout << cgi->setCookie("FamilyName", cgi->httpPost("FamilyName"));
+		}
+	cout << endl;
 	if (cgi->httpPost("send")=="send")
 		{
 			Send(cgi,db);
-			cout << cgi->setCookie("Name", cgi->httpPost("Name"));
-			cout << cgi->setCookie("FamilyName", cgi->httpPost("FamilyName"));
-			cout << endl;
 			cout << readFile("index.html");
-			cout << "В Базу данных добавлено: " << cgi->httpPost("Name") << "  " << cgi->httpPost("FamilyName");
+			cout << "В Базу данных добавлено: " << cgi->httpPost("Name") << "  " << cgi->httpPost("FamilyName")<< "<br>";
 		}
 		
 	if (cgi->httpPost("show")=="show")
-		{
-			cout << endl;
 			cout <<  Show(db) << endl;
-			return 0;
-		}
+
 		
 	if (cgi->httpPost("delete")=="delete")
 		{
+
 			Delete(cgi, db);
-			cout << endl;
 			cout <<  Show(db) << endl;
 		}
-	if (cgi->httpPost("back")=="back")
-		{
-			cout << endl;
-			cout << readFile("index.html");
-			return 0;
-		}
+	if ((cgi->httpPost("back")=="back") || (cgi->httpPost("\"load\"")=="load") )
+			cout << readFile("index.html");		
+
+	if ((cgi->httpPost("admin")=="admin"))
+	{
+		cout << readFile("index.html");		
+		ses->setvar(ses->getUID(), "admin", "1");
+	}
+	if ((cgi->httpPost("user")=="user"))
+	{
+		cout << readFile("index.html");		
+		ses->setvar(ses->getUID(), "admin", "0");
+	}
+
+	if (ses->getvar(ses->getUID(), "admin")=="1")
+		cout << "Добро пожаловать, администратор"<< "<br>";
+	else
+		cout << "Добро пожаловать, пользователь"<< "<br>";
+    cout << "Current session's UID: " << ses->getUID() << "<br>";
 	delete db;
+	delete cgi;
     return 0;
 }
 

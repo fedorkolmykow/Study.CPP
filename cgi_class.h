@@ -1,37 +1,48 @@
- /* File cgi_class.h */
+/* File cgi_class.h */
  #ifndef CGI_CLASS_H
  #define CGI_CLASS_H
 #include <string>
 #include <map>
 #include <sstream>
-#include <algorithm>
 #include <iostream>
-#include <sstream>
+#include <cstdio> 
+#include <fstream>
+#include "str_methods.h"
+
 using namespace std;
+
+typedef struct {
+  std::string filename; 	// реальное имя файла
+  std::string type;	// MIME-тип файла
+  std::string tmp_name; // временное имя файла
+  int error; 	// код ошибки (0, если нет)
+  size_t size; 	// размер загружаемого файла
+} UploadedFile;
+
 class CGI
 {
 	public :
 		CGI();
+        UploadedFile* getFile(string name);
+        string getHeader(string);
 		string httpGet(string name);
 		string httpPost(string name);
 		string getCookie(string name);
 		string setCookie(string name, string value);
 		istringstream Stream();
-		map <string, string> cookies;
-		~CGI() {}
+		~CGI();
 	private:
-		map <string, string> split(string s, char delimiter1, char delimetr2);
+		vector<UploadedFile> Files;
 		map <string, string> data;
 		map <string,string> headers;
-		//map <string, string> cookies;
-		void ltrim(std::string &s);
-		void rtrim(std::string &s);
-		void trim(std::string &s);
+		map <string, string> cookies;
 		void parseHeaders();
 		char from_hex(char ch);
-		string getHeader(string);
+        int move_uploaded_file(UploadedFile tmpFile, string path);		
 		string rawURLDecode(string text);
-		string Replace(string text);
+		
 } ;
+
+
  
- #endif /* CGI_CLASS_H */
+#endif /* CGI_CLASS_H */

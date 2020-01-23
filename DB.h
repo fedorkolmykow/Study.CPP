@@ -1,4 +1,4 @@
- /* File DB.h */
+/* File DB.h */
  #ifndef DB_H
  #define DB_H
 #include <string>
@@ -21,4 +21,4 @@ class DB
 		string Path;
 } ;
  
- #endif /* CGI_CLASS_H */
+#endif /* CGI_CLASS_H */
