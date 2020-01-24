@@ -18,7 +18,8 @@
 		<form action="cgi_script.cgi" method="POST" enctype="multipart/form-data">
 				<p>	<input type="file" name="myFileOne"> </p>
 				<p>	<input type="file" name="myFileTwo"> </p>
-				<p>	<input name="load" type="submit" value="load"> </p>
+				<p>	<input name="load" type="submit" value="load">
+	<!--			    <input name="show_files" type="submit" value="show_files"></p>-->
 		</form>
         <script>
           function getCookie(name) {
@@ -26,6 +27,7 @@
             var parts = value.split("; " + name + "=");
             if (parts.length == 2) return parts.pop().split(";").shift();
           }
+          
           document.getElementById("n").value = getCookie("Name");
           document.getElementById("fn").value = getCookie("FamilyName");
         </script>

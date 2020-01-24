@@ -5,13 +5,14 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+//#include <filesystem>
 
 using namespace std;
 void Send(CGI* cgi, DB* db);
 void Delete(CGI* cgi, DB* db);
 string Show(DB* db);
 string readFile(const string& fileName);
-
+string ShowFiles();
 
 int main()
 {
@@ -49,9 +50,12 @@ int main()
 			Delete(cgi, db);
 			cout <<  Show(db) << endl;
 		}
-	if ((cgi->httpPost("back")=="back") || (cgi->httpPost("\"load\"")=="load") )
+	if ((cgi->httpPost("back")=="back") || (cgi->httpPost("load")=="load") )
 			cout << readFile("index.html");		
 
+	//if (cgi->httpPost("\"show_files\"")=="show_files" )
+	//		cout << ShowFiles();	
+			
 	if ((cgi->httpPost("admin")=="admin"))
 	{
 		cout << readFile("index.html");		
@@ -68,6 +72,10 @@ int main()
 	else
 		cout << "Добро пожаловать, пользователь"<< "<br>";
     cout << "Current session's UID: " << ses->getUID() << "<br>";
+    
+    //cout << "Files: <br>";
+    //for(auto& p: fs::directory_iterator("files"))
+    //    cout << p << "<br>";
 	delete db;
 	delete cgi;
     return 0;
@@ -120,6 +128,33 @@ void Delete(CGI* cgi, DB* db)
 	
 	
 }
+
+/*string ShowFiles()
+{
+	list<string> Page;
+	list<string> :: iterator it;
+	string Output;
+	istringstream Stream(readFile("blank1.html"));
+	while(getline(Stream, Output))
+	{
+		Page.push_back(Output);
+	}
+	it = Page.begin();
+	it++;
+	it++;
+	it++;
+	for(int i = 0; i < db->RecordsCount(); i++)
+	{
+		Output = "<li><p>"  +  db->ReadRecord(i) + "\t<input name=\"check" + to_string(i) +"\" type=\"checkbox\"></p></li>";
+		Page.insert(it, Output);
+	}
+	Output = "";
+	for (it=Page.begin(); it!=Page.end(); ++it)
+		Output = Output + *it + "\n";
+	return Output;
+	
+	
+}*/
 
 string readFile(const string& fileName) {
     ifstream f(fileName);

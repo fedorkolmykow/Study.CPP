@@ -35,7 +35,6 @@ void Session::setvar(string key, string var, string val)
     
 Session::Session(string _uid)
     {
-		//cout << _uid << "br";
         client.connect("127.0.0.1", 6379);
         if (!CheckUID(_uid))
         {

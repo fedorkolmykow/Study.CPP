@@ -3,7 +3,7 @@ CGI::CGI()
 {
     string Data;
     parseHeaders();
-
+	cookies = split(headers["cookies"], ';','=');
     if (headers["type"]=="application/x-www-form-urlencoded")
     {
 		cin >> Data;
@@ -14,7 +14,7 @@ CGI::CGI()
             i->second = Replace(i->second, "<", "&lt");
             i->second = Replace(i->second, ">", "&gt");
         }
-        cookies = split(headers["cookies"], ';','=');
+        
     }
     if ((headers["type"]=="multipart/form-data"))
     {
@@ -31,6 +31,7 @@ CGI::CGI()
             string str = *it;
             size_t pos = str.find("\n\r"); 
             string head = str.substr(0, pos);
+            head = Replace(head, "\"", "");
             map<string,string> subheaders = split(head, '\n',':');
             map<string,string> disposition = split(subheaders["Content-Disposition"], ';','=');
             str.erase(0, pos);
